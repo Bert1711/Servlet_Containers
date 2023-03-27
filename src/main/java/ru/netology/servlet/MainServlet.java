@@ -11,9 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class MainServlet extends HttpServlet {
-  private final PostController controller;
+  private PostController controller;
 
-  public MainServlet() {
+  @Override
+  public void init() {
     final var repository = new PostRepository();
     final var service = new PostService(repository);
     controller = new PostController(service);
@@ -23,7 +24,7 @@ public class MainServlet extends HttpServlet {
   private static final String POST_BY_ID_PATH = "/api/posts/\\d+";
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     final var path = req.getRequestURI();
     if (path.equals(ALL_POSTS_PATH)) {
       controller.all(resp);
@@ -36,7 +37,7 @@ public class MainServlet extends HttpServlet {
   }
 
   @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     final var path = req.getRequestURI();
     if (path.equals(ALL_POSTS_PATH)) {
       controller.save(req.getReader(), resp);
@@ -46,7 +47,7 @@ public class MainServlet extends HttpServlet {
   }
 
   @Override
-  protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     final var path = req.getRequestURI();
     if (path.matches(POST_BY_ID_PATH)) {
       final var id = Long.parseLong(path.substring(path.lastIndexOf("/") + 1));
@@ -57,7 +58,7 @@ public class MainServlet extends HttpServlet {
   }
 
   @Override
-  protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void service(HttpServletRequest req, HttpServletResponse resp) {
     try {
       super.service(req, resp);
     } catch (Exception e) {
