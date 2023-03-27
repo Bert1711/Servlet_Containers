@@ -12,6 +12,9 @@ import java.io.IOException;
 
 public class MainServlet extends HttpServlet {
   private PostController controller;
+  private static final String POST_BY_ID_PATH = "/api/posts/\\d+";
+  private static final String ALL_POSTS_PATH = "/api/posts";
+
 
   @Override
   public void init() {
@@ -19,9 +22,6 @@ public class MainServlet extends HttpServlet {
     final var service = new PostService(repository);
     controller = new PostController(service);
   }
-
-  private static final String ALL_POSTS_PATH = "/api/posts";
-  private static final String POST_BY_ID_PATH = "/api/posts/\\d+";
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
